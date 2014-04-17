@@ -1,6 +1,6 @@
 <?php
 
-require '_lib.php';
+require_once '_lib.php';
 
 $parentTplName = 'inheritance-parent-1000';
 $childTplName = 'inheritance-child-1000';

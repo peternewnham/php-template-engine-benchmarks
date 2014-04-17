@@ -1,6 +1,6 @@
 <?php
 
-require '_lib.php';
+require_once '_lib.php';
 
 $tplName = 'echo-1000';
 
@@ -22,7 +22,7 @@ generateTemplate('php', $tplName, function() {
 generateTemplate('smarty', $tplName, function() {
 	$tpl = '';
 	for ($i=0; $i<1000; $i++) {
-		$tpl .= '{$var|escape} ';
+		$tpl .= '{$var} ';
 	}
 	return $tpl;
 });

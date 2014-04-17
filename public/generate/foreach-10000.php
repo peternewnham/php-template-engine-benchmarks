@@ -1,6 +1,6 @@
 <?php
 
-require '_lib.php';
+require_once '_lib.php';
 
 $tplName = 'foreach-10000';
 
@@ -22,7 +22,7 @@ foreach ($data as $value) {
 
 generateTemplate('smarty', $tplName, function() {
 	$tpl = '{foreach from=$data item=value}
-	{$value|escape}
+	{$value}
 {/foreach}';
 	return $tpl;
 });

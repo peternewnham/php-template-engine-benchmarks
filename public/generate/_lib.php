@@ -8,7 +8,7 @@ function generateTemplate($engine, $tpl, $contents, $extension='tpl') {
 		echo 'generated';
 	}
 	else {
-		echo 'not generated';
+		echo 'not generated ***';
 	}
 	echo '<hr>';
 

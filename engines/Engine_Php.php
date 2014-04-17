@@ -22,6 +22,10 @@ class Engine_Php extends Engine {
 
 	public function run() {
 
+		if (false === $this->useCache) {
+			$this->clearCompiled();
+		}
+
 		$data = $this->getData();
 		if (is_array($data)) {
 			extract($data);
@@ -29,16 +33,23 @@ class Engine_Php extends Engine {
 
 		$template = $this->templateDir . '/' . $this->template . '.php';
 
-		$start = microtime(true);
-		$mem = memory_get_peak_usage();
+		$this->startProfiler();
 
-		ob_start();
-		include $template;
-		$content = ob_get_contents();
-		ob_end_clean();
-		
-		$end = microtime(true)-$start;
-		$mem = memory_get_peak_usage() - $mem;
+		$templateHash = md5($template);
+		$compiled = $this->compiledDir . '/' . $templateHash;
+
+		if (file_exists($compiled)) {
+			$content = file_get_contents($compiled);
+		}
+		else {
+			ob_start();
+			include $template;
+			$content = ob_get_contents();
+			ob_end_clean();
+			file_put_contents($compiled, $content);
+		}
+
+		$results = $this->endProfiler();
 
 		if ($this->output) {
 			die($content);
@@ -46,10 +57,7 @@ class Engine_Php extends Engine {
 
 		$this->terminate(null);
 
-		return array(
-			'time' => $end,
-			'memory' => $mem
-		);
+		return $results;
 
 	}
 

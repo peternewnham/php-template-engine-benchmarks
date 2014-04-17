@@ -33,11 +33,11 @@ class Engine_Twig extends Engine {
 			'autoescape' => true
 		));
 
-		if (false === $this->useCache) {
+		/*if (false === $this->useCache) {
 			$twig->clearTemplateCache();
 			$twig->clearCacheFiles();
 			$twig->setCache(false);
-		}
+		}*/
 
 		return $twig;
 
@@ -51,20 +51,22 @@ class Engine_Twig extends Engine {
 
 	public function run() {
 
+		if (false === $this->useCache) {
+			$this->clearCompiled();
+		}
+
 		$data = $this->getData();
 
 		$template = $this->template . '.tpl';
 
-		$start = microtime(true);
-		$mem = memory_get_peak_usage();
+		$this->startProfiler();
 
 		$twig = $this->initialise();
 
 		$template = $twig->loadTemplate($template);
 		$content = $template->render($data);
-		
-		$end = microtime(true)-$start;
-		$mem = memory_get_peak_usage() - $mem;
+
+		$results = $this->endProfiler();
 
 		if ($this->output) {
 			die($content);
@@ -72,10 +74,7 @@ class Engine_Twig extends Engine {
 
 		$this->terminate($twig);
 
-		return array(
-			'time' => $end,
-			'memory' => $mem
-		);
+		return $results;
 
 	}
 

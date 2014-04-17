@@ -22,11 +22,13 @@ class Engine_Smarty extends Engine {
 		$smarty->setTemplateDir($this->templateDir);
 		$smarty->setCompileDir($this->compiledDir);
 		$smarty->compile_check = false;
-		$smarty->escape_html = false;
+		$smarty->default_modifiers = array(
+			'escape:"htmlall"'
+		);
 
-		if (false === $this->useCache) {
+		/*if (false === $this->useCache) {
 			$smarty->clearCompiledTemplate();
-		}
+		}*/
 
 		return $smarty;
 
@@ -38,22 +40,24 @@ class Engine_Smarty extends Engine {
 
 	}
 
-	public function run($reset=false) {
+	public function run() {
+
+		if (false === $this->useCache) {
+			$this->clearCompiled();
+		}
 
 		$data = $this->getData();
 
 		$template = $this->template . '.tpl';
 
-		$start = microtime(true);
-		$mem = memory_get_peak_usage();
+		$this->startProfiler();
 
 		$smarty = $this->initialise();
 
 		$smarty->assign($data);
 		$content = $smarty->fetch($template);
 
-		$end = microtime(true)-$start;
-		$mem = memory_get_peak_usage() - $mem;
+		$results = $this->endProfiler();
 
 		if ($this->output) {
 			die($content);
@@ -61,10 +65,7 @@ class Engine_Smarty extends Engine {
 
 		$this->terminate($smarty);
 
-		return array(
-			'time' => $end,
-			'memory' => $mem
-		);
+		return $results;
 
 	}
 

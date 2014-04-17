@@ -1,3 +1,3 @@
 {foreach from=$data item=value}
-	{$value|escape}
+	{$value}
 {/foreach}

@@ -1,6 +1,6 @@
 <?php
 
-require '_lib.php';
+require_once '_lib.php';
 
 $tplName = 'variables-100';
 
@@ -23,7 +23,7 @@ generateTemplate('php', $tplName, function() {
 generateTemplate('smarty', $tplName, function() {
 	$tpl = '';
 	for ($i=0; $i<100; $i++) {
-		$tpl .= '{$var' . $i . '|escape} ';
+		$tpl .= '{$var' . $i . '} ';
 	}
 	return $tpl;
 });

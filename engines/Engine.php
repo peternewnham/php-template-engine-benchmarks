@@ -13,6 +13,9 @@ abstract class Engine {
 
 	protected $output = false;
 
+	private $timer;
+	private $memory;
+
 	public function setDataDir($dir) {
 		$this->dataDir = $dir;
 	}
@@ -53,6 +56,45 @@ abstract class Engine {
 		}
 
 		return $data;
+
+	}
+
+	protected function clearCompiled() {
+
+		$files = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator($this->compiledDir, RecursiveDirectoryIterator::SKIP_DOTS),
+			RecursiveIteratorIterator::CHILD_FIRST
+		);
+
+		$ignore = array(
+			'.gitignore'
+		);
+
+		foreach ($files as $file) {
+			$path = $file->getPathname();
+			if (!preg_match('/\.gitignore$/', $path)) {
+				$file->isFile() ? unlink($file->getPathname()) : rmdir($file->getPathname());
+			}
+		}
+
+	}
+
+	protected function startProfiler() {
+
+		$this->timer = microtime(true);
+		$this->memory = memory_get_peak_usage();
+
+	}
+
+	protected function endProfiler() {
+
+		$memory = memory_get_peak_usage(true) - $this->memory;
+		$time = microtime(true) - $this->timer;
+
+		return array(
+			'memory' => $memory,
+			'time' => $time
+		);
 
 	}
 

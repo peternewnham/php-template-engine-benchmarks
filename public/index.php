@@ -56,6 +56,11 @@
 						<option value="foreach-1000">Foreach Loop x 1000</option>
 						<option value="foreach-10000">Foreach Loop x 10000</option>
 					</optgroup>
+					<optgroup label="Including">
+						<option value="include-parent-100">Include x 100</option>
+						<option value="include-parent-1000">Include x 1000</option>
+						<option value="include-parent-10000">Include x 10000</option>
+					</optgroup>
 					<optgroup label="Inheritance">
 						<option value="inheritance-child-100">Inheritance x 100</option>
 						<option value="inheritance-child-1000">Inheritance x 1000</option>
